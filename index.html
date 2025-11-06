@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Stack</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
+   
+</head>
+<body>
+    <div class="intro">
+    <h2>Bem-vindo ao Mind Stack</h2>
+    <p>Seu aplicativo de notas estilo post-it para organizar suas ideias e tarefas diárias.</p>
+    <p class="button-container">
+        <button id="button_table" class="login-btn">Login</button>
+        <button id="button_table" class="signup-btn">Criar Conta</button>
+    </p>
+    </div>
+
+    
+    <div class="Login_form" id="login-form_table">
+        <span class="close-btn" id="closeLogin">&times;</span>
+        <h2 class="form-title">Login</h2>
+        <form>
+            <p>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required placeholder="Digite seu email">
+            </p>
+            <p class="password-box">
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required placeholder="Digite sua senha" >
+                <span id="togglePassword" class="eye-icon">&#128065;</span>
+            </p>
+            <button type="submit" class="form-btn"><a class="form-link" href="groups.html" target="_self">Entrar</a></button>
+        </form>
+
+    </div>
+
+    <div class="signup_form" id="signup-form_table">
+        <span class="close-btn" id="closeSignup">&times;</span>
+        <h2 class="form-title">Criar Conta</h2>
+        <form>
+            <p>
+                <label for="new-username">Usuário:</label>
+                <input type="text" id="new-username" name="new-username" required placeholder="Digite seu usuário">
+            </p>
+            <p>
+                <label for="new-email">Email:</label>
+                <input type="email" id="new-email" name="new-email" required placeholder="Digite seu email">
+            </p>
+            <p class="password-box">
+                <label for="new-password">Senha:</label>
+                <input type="password" id="new-password" name="new-password" required placeholder="Digite sua senha">
+                <input type="password" id="new-password-confirm" name="new-password-confirm" required placeholder="Confirme sua senha">
+            </p>
+            <button type="submit" class="form-btn"><a class="form-link" href="first.html" target="_self">Registrar</a></button>
+        </form>
+    </div>
+
+    <button id="settings-open" class="hamburger-btn">&#x2699;&#xFE0F;</button>
+    
+    <div id="settings-panel" class="settings-panel">
+        <span class="close-btn" id="close-settings">&times;</span>
+        <h2>Configurações</h2>
+
+        <div class="setting-option">
+            <label for="dark-mode-toggle">Modo Escuro:</label>
+            <label class="switch">
+                <input type="checkbox" id="dark-mode-toggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <h2>Autor</h2>
+        <p class="setting_info">Guilherme Araújo</p>
+        <div class="contact">
+            <h2>Contato</h2>
+            <p>
+                <a class="setting_link" href="https://github.com/Guilh3rme2007" target="_blank"><img class="references" src="imagens/github.png" alt="gitHub"></a>
+            </p>
+            
+            <br>
+            
+            <p>
+                <a href="mailto:araujo.gpdem@gmail.com?subject=Entrar em contato"><img class="references"  src="imagens/e-mail.png" alt="email"></a>
+            </p>
+        </div>    
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
