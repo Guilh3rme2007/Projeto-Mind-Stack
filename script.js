@@ -24,10 +24,38 @@ closeSettingsBtn.addEventListener('click', closeSettingsPanel);
 
 // Script para alternar entre modo claro e escuro com persistência usando localStorage
 //Obter elementos 
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const body = document.body;
+//Chave para o armazenamento local
+const storageKey = 'darkModePreference';
 // Função para alternar o modo escuro
+function toggleDarkMode() {
+    body.classList.toggle('dark-mode');
+    const isDarkMode = body.classList.contains('dark-mode');
+    localStorage.setItem(storageKey, isDarkMode);
+}
 // Verificar a preferência do usuário no armazenamento local
 //verificar a preferência salva ao carregar a página
+function applySavedPreference() {
+    const savedPreference = localStorage.getItem(storageKey);
+
+    if(savedPreference === 'true') {
+        const isDarkModeSaved = savedPreference === 'true';
+
+        if(isDarkModeSaved) {
+            body.classList.add('dark-mode');
+            darkModeToggle.checked = true;
+        } else {
+            body.classList.remove('dark-mode');
+            darkModeToggle.checked = false;
+        }
+    }
+}
 //Adicionar evento de change ao switch
+darkModeToggle.addEventListener('change', toggleDarkMode);
+
+//Aplicar a preferência salva ao carregar a página
+applySavedPreference();
 //Script para salvar a preferência de modo claro/escuro em todo o aplicativo
 //Script para abrir e fechar o menu de login e criar conta
 //Obter os botões
