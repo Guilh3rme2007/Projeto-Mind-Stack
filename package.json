@@ -1,0 +1,27 @@
+{
+  "name": "projeto-mind-stack",
+  "version": "1.0.0",
+  "description": "https://guilh3rme2007.github.io/Projeto-Mind-Stack/",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Guilh3rme2007/Projeto-Mind-Stack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Guilh3rme2007/Projeto-Mind-Stack/issues"
+  },
+  "homepage": "https://github.com/Guilh3rme2007/Projeto-Mind-Stack#readme",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.15.3"
+  }
+}
