@@ -6,6 +6,9 @@
 //Script para mudar a cor do post-it e salvar a preferência no localStorage
 //Script para salvar a preferência de cor do post-it no localStorage
 //Script para abrir e fechar o menu de configurações
+
+const { response } = require("express");
+
 //Obter elementos
 const confBtn = document.getElementById('settings-open');
 const closeSettingsBtn = document.getElementById('close-settings');
@@ -100,15 +103,40 @@ loginFormElement.addEventListener('submit', function(event) {
 //Cadastro
 signupFormElement.addEventListener('submit', function(event) {
     event.preventDefault();
+    const username = document.getElementById('new-username').value;
+    const email = document.getElementById('new-email').value;
     const newPassword = document.getElementById('new-password').value;
-    const confirmPassword = document.getElementById('new-password-corfirm').value;
-    if(signupFormElement.checkValidity()) {
-        if(newPassword !== confirmPassword) {
+    const confirmPassword = document.getElementById('new-password-confirm').value;
+    if(newPassword !== confirmPassword) {
             alert('Erro: Senhas diferentes');
-        } else {
-            alert('Conta criada com sucesso!');
+            return;
+    }
+
+    if(signupFormElement.checkValidity()) {
+        fetch('/insetUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+        },
+            body: JSON.stringify({
+                'new-username': username,
+                'new-email': email,
+                'new-password': newPassword
+             })
+        })
+        .then(response => {
+            if(!response.ok) {
+                return response.text().then(text => {throw new Error(text)});
+            }
+            return response.text();
+        })
+        .then(data => {
+            alert('Cadastro realizado com sucesso!' + data);
             window.location.href = 'first.html';
-        }
+        })
+        .catch(error => {
+            alert('Erro ao cadastrar: ' + error.message);
+        });
     } else {
         signupFormElement.reportValidity();
     }

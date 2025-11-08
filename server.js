@@ -35,11 +35,10 @@ app.post('/insertUser', (req, res) =>{
         'new-email': email,
         'new-password':password
     } = req.body;
-});
 
-const sql = 'INSERT INTO user (username,email,password) VALUES (?, ?, ?)';
+    const sql = 'INSERT INTO user (username,email,password) VALUES (?, ?, ?)';
 
-connection.query(sql, [username, email, password], (err, result) => {
+    connection.query(sql, [username, email, password], (err, result) => {
     if(err) {
         console.error('Erro ao inserir usuário', err);
         if(err.code === 'ER_DUP_ENTRY') {
@@ -48,7 +47,11 @@ connection.query(sql, [username, email, password], (err, result) => {
         return res.status(500).send('Erro interno do servidor ao criar a conta');
     }
     console.log('Usuário inserido com sucesso. ID:', result.insertId);
+    res.status(201).send('Usuário criado com sucesso.');
+    });
+
 });
+
 
 app.get('/first.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'first.html'));
@@ -59,3 +62,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em https://localhost:${PORT}`);
 });
+

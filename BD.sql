@@ -16,7 +16,9 @@ in f_email varchar(100),
 in f_password varchar(255)
 )
 begin
-insert into
+insert into user(username, email, password)
+values(f_username, f_email, f_password);
+end
 //
 DELIMITER;
 
