@@ -6,9 +6,6 @@
 //Script para mudar a cor do post-it e salvar a preferência no localStorage
 //Script para salvar a preferência de cor do post-it no localStorage
 //Script para abrir e fechar o menu de configurações
-
-const { response } = require("express");
-
 //Obter elementos
 const confBtn = document.getElementById('settings-open');
 const closeSettingsBtn = document.getElementById('close-settings');
@@ -113,16 +110,17 @@ signupFormElement.addEventListener('submit', function(event) {
     }
 
     if(signupFormElement.checkValidity()) {
-        fetch('/insetUser', {
+        const urlEncodedData = new URLSearchParams();
+        urlEncodedData.append('new-username', username);
+        urlEncodedData.append('new-email', email);
+        urlEncodedData.append('new-password', newPassword);
+
+        fetch('/insertUser', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
         },
-            body: JSON.stringify({
-                'new-username': username,
-                'new-email': email,
-                'new-password': newPassword
-             })
+            body: urlEncodedData
         })
         .then(response => {
             if(!response.ok) {

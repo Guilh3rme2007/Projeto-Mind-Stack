@@ -26,7 +26,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res) =>{
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.post('/insertUser', (req, res) =>{
@@ -60,6 +60,6 @@ app.get('/first.html', (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em https://localhost:${PORT}`);
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
 
