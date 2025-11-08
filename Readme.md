@@ -1,4 +1,4 @@
-https://guilh3rme2007.github.io/Projeto-Mind-Stack/
+http://localhost:3000
 
 Processos para adicionar
  - criar os post-its
