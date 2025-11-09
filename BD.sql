@@ -22,3 +22,6 @@ end
 //
 DELIMITER;
 
+create user 'remote_user'@'%' identified by 'Gu1lh3rm3';
+grant all privileges on mindstack_db.* to 'remote_user'@'%' with grant option;
+flush privileges;
