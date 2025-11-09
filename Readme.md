@@ -1,4 +1,5 @@
-http://localhost:3000
+Para acessar tente esse link (substituindo pelo seu ip local)
+http://SEU_ENDEREÇO_IP_LOCAL:3000
 
 Processos para adicionar
  - criar os post-its
