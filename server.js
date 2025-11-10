@@ -63,3 +63,48 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
 
+app.post('/notes/create', (req, res) => {
+    const {user_id, group_name, content = '', color = '#ffff76ff', position_x = 0, position_y = 0} = req.body;
+
+    if(!user_id || !group_name) {
+        return res.status(400).send('Dados incompletos');
+    }
+
+    const sql = 'INSERT INTO note (user_id, group_name, content, color, position_x, position_y) VALUES (?, ?, ?, ?, ?, ?)';
+
+    connection.query(sql, [user_id, group_name, content, color, position_x, position_y], (err, result) => {
+        if(err) {
+            console.error('Erro ao criar nota', err);
+            return res.status(500).send('Erro interno ao criar nota');
+        }
+        console.log('Nota criada com sucesso. ID:', result.insertId);
+
+        res.status(201).json({ note_id: result.insertId, message: 'Nota criada com sucesso'});
+    });
+});
+
+app.post('/notes/update', (req, res) => {
+    const {note_id, user_id, content, color, position_x, position_y} = req.body;
+
+    if(!note_id || !user_id) {
+        return res.status(400).send('Dados incompletos');
+    }
+    const sql = 'UPDATE note SET content = ?, color = ?, position_x = ?, position_y = ? WHERE note_id = ? AND user_id = ?';
+
+    const updateContent = content !== undefined ? content: null;
+    const updateColor = color !== undefined ? color: '#ffff76ff';
+    const updateX = position_x !== undefined ? position_x: 0;
+    const updateY = position_y !== undefined ? position_y: 0;
+
+    connection.query(sql, [updateContent, updateColor, updateX, updateY, note_id, user_id], (err, result) => {
+        if(err) {
+            console.error('Erro ao atualizar nota', err);
+            return res.status(500).send('Erro interno do servidor');
+        }
+        if(result.affectedRows === 0) {
+            return res.status(404).send('nota não encontrada');
+        }
+        res.status(200).send('nota atualizada com sucesso');
+    });
+});
+

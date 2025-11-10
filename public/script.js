@@ -1,10 +1,77 @@
 //Script para criar notas
-//Script para conectar com o MySQL
-//Script para deletar notas
+//Obter conteiner de notas e o botão
+const notesConteiner = document.getElementById('notes-conteiner');
+const addNoteBtn = document.getElementById('add-note-btn');
+
+//Criar elemento no HTML
+function creatNoteElement(id, content = '', color = '#ffff76ff') {
+    const note = document.createElement('div');
+    note.classList.add('post-it');
+    note.style.backgroundColor = color;
+    note.setAttribute('data-id', id);
+
+    const textarea = document.createElement('textarea');
+    textarea.classList.add('note-content');
+    textarea.value = content;
+    textarea.placeholder = 'Digite sua nota...';
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('delete-note-btn');
+    deleteBtn.textContent = 'X';
+
+    note.appendChild(textarea);
+    note.appendChild(deleteBtn);
+
+
+deleteBtn.addEventListener('click', () => deleteNote(note, id));
+
+textarea.addEventListener('input', () => updateNoteContent(id, textarea.value));
+
+return note;
+}
+
+//Adicionar novo post-it
+function addNote() {
+    const newID = Date.now().toString();
+    const newNote = creatNoteElement(newID);
+
+    notesConteiner.appendChild(newNote);
+
+    newNote.querySelector('.note-content').focus();
+
+    saveNewNote(newID);
+}
+
+function deleteNote(noteElement, id) {
+    noteElement.remove();
+
+    deleteNoteStorage(id);
+}
+function saveNewNote() {}
+function deleteNoteStorage() {}
+
+//Botão de adicionar notas
+if(addNoteBtn) {
+    addNoteBtn.addEventListener('click', addNote);
+}
 //Script para editar notas
 //Script para arrastar e soltar notas
 //Script para mudar a cor do post-it e salvar a preferência no localStorage
 //Script para salvar a preferência de cor do post-it no localStorage
+
+//Gerenciar o grupo de notas
+// Obter o ID
+const ulrParams = new URLSearchParams(window.location.search);
+const currentGroupId = ulrParams.get('groupId') || 'defalt-group';
+
+//Carregar notas do grupo atual
+function loadNotesCurrentGroup() {
+    console.log(`Carregando anotações para o grupo: ${currentGroupId}`);
+    const exampleNote = creatNoteElement(101, `Esta é uma nota do grupo: ${currentGroupId}`);
+    notesConteiner.appendChild(exampleNote);
+}
+//chamar função
+loadNotesCurrentGroup();
 //Script para abrir e fechar o menu de configurações
 //Obter elementos
 const confBtn = document.getElementById('settings-open');
