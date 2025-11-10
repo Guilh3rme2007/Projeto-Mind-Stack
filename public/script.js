@@ -1,8 +1,3 @@
-//Script para criar notas
-
-const { text } = require("body-parser");
-const { response } = require("express");
-
 //Obter conteiner de notas e o botão
 const notesConteiner = document.getElementById('notes-conteiner');
 const addNoteBtn = document.getElementById('add-note-btn');
@@ -137,7 +132,7 @@ const currentGroupName = ulrParams.get('groupId') || 'defalt-group';
 
 //Carregar notas do grupo atual
 async function loadNotesCurrentGroup() {
-    console.log(`Carregando anotações para o grupo: ${currentGroupId}`);
+    console.log(`Carregando anotações para o grupo: ${currentGroupName}`);
     try{
     const response = await fetch(`/notes/get/${currentGroupName}/${LOGGED_IN_USER_ID}`);
 
@@ -234,6 +229,19 @@ function openSignupForm() {
 function closeForms() {
     loginForm.classList.remove('active');
     signupForm.classList.remove('active');
+}
+
+if(loginBtn) {
+    loginBtn.addEventListener('click', openLoginForm);
+}
+if(signupBtn) {
+    signupBtn.addEventListener('click', openSignupForm);
+}
+if(closeLoginBtn) {
+    closeLoginBtn.addEventListener('click', closeForms);
+}
+if(closeSignupBtn) {
+    closeSignupBtn.addEventListener('click', closeForms);
 }
 
 loginBtn.addEventListener('click', openLoginForm);

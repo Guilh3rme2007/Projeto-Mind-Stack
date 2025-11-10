@@ -159,7 +159,7 @@ app.post('/notes/delete', (req, res) => {
     });
 });
 
-app.post('/notes/get/:group_name/:user_id', (req, res) => {
+app.get('/notes/get/:group_name/:user_id', (req, res) => {
     const {group_name, user_id} = req.params;
 
     if(!group_name || !user_id) {
