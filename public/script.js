@@ -29,6 +29,8 @@ textarea.addEventListener('input', () => updateNoteContent(id, textarea.value));
 return note;
 }
 
+const LOGGED_IN_USER_ID = localStorage.getItem('mindstack_user_id') || 1;
+
 async function updateNoteContent(id, content) {
     try{
         const response = await fetch('/notes/update', {
@@ -126,7 +128,6 @@ if(addNoteBtn) {
 
 //Gerenciar o grupo de notas
 // Obter o ID
-const LOGGED_IN_USER_ID = localStorage.getItem('mindstack_user_id') || 1;
 const ulrParams = new URLSearchParams(window.location.search);
 const currentGroupName = ulrParams.get('groupId') || 'defalt-group';
 

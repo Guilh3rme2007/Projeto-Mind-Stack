@@ -9,19 +9,6 @@ password varchar(255) not null,
 created_at timestamp default current_timestamp
 );
 
-DELIMITER//
-create procedure insertUser(
-in f_username varchar(100),
-in f_email varchar(100),
-in f_password varchar(255)
-)
-begin
-insert into user(username, email, password)
-values(f_username, f_email, f_password);
-end
-//
-DELIMITER;
-
 create user if not exists 'remote_user'@'%' identified by 'Gu1lh3rm3';
 grant all privileges on mindstack_db.* to 'remote_user'@'%' with grant option;
 flush privileges;
@@ -42,3 +29,16 @@ create table if not exists note (
 );
 
 select * from note;
+
+DELIMITER//
+create procedure insertUser(
+in f_username varchar(100),
+in f_email varchar(100),
+in f_password varchar(255)
+)
+begin
+insert into user(username, email, password)
+values(f_username, f_email, f_password);
+end
+//
+DELIMITER;

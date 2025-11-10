@@ -58,7 +58,7 @@ app.post('/login', (req, res) =>{
     if(!email || !password) {
         return res.status(400).send('Email e senha são obrigatórios');
     }
-    const sql = 'SELECT user_id, password, FROM user WHERE email = ?';
+    const sql = 'SELECT user_id, password FROM user WHERE email = ?';
     connection.query(sql, [email], (err, results) => {
         if(err){
             console.error('Erro na busca do login:', err);
