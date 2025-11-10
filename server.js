@@ -108,3 +108,41 @@ app.post('/notes/update', (req, res) => {
     });
 });
 
+app.post('/notes/delete', (req, res) => {
+    const { note_id, user_id} = req.body;
+
+    if(!note_id || !user_id) {
+        return res.status(400).send('Dados incompletos');
+    }
+
+    const sql = 'DELETE FROM note WHERE note_id = ? AND user_id = ?';
+    connection.query(sql, [note_id, user_id], (err, result) => {
+        if(err) {
+            console.error('Erro ao deletar nota', err);
+            return res.status(500).send('Erro interno do servidor');
+        }
+        if(result.affectedRows === 0) {
+            return res.status(404).send('nota não encontrada');
+        }
+        res.status(200).send('nota deletada com sucesso');
+    });
+});
+
+app.post('/notes/get/:group_name/:user_id', (req, res) => {
+    const {group_name, user_id} = req.params;
+
+    if(!group_name || !user_id) {
+        return res.status(400).send('Dados incompletos');
+    }
+
+    const sql = 'SELECT * FROM note WHERE group_name = ? AND user_id = ? ORDER BY note_id DESC';
+
+    connection.query(sql [group_name, user_id], (err, results) => {
+        if(err) {
+            console.error('Erro ao buscar notas', err);
+            return res.status(500).send('Erro interno do servidor');
+        }
+        
+        res.status(200).json(results);
+    });
+});

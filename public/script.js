@@ -32,14 +32,37 @@ return note;
 
 //Adicionar novo post-it
 function addNote() {
-    const newID = Date.now().toString();
-    const newNote = creatNoteElement(newID);
 
-    notesConteiner.appendChild(newNote);
+    saveNewNote();
+}
 
-    newNote.querySelector('.note-content').focus();
+async function saveNewNote() {
+    try{
+        const response = await fetch('/notes/create', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                user_id: LOGGED_IN_USER_ID,
+                group_name: currentGroupName,
+                content: '',
+                color: '#ffff76ff'
+            })
+        });
 
-    saveNewNote(newID);
+        if(response.ok) {
+            const data = await response.json();
+            const newNote = creatNoteElement(data.note_id, '', '#ffff76ff');
+            notesConteiner.appendChild(newNote);
+            newNote.querySelector('.note-content').focus();
+            console.log(`Nota criada com sucesso. ID ${data.note_id}`);
+        } else {
+            const errorText = await response.text();
+            alert('Erro ao criar a nota no servidor' + errorText);
+        }
+    } catch (error) {
+        console.error('Erro na requisição de criação de nota', error);
+        alert('Erro de conexão ao criar a nota');
+    }
 }
 
 function deleteNote(noteElement, id) {
@@ -47,8 +70,29 @@ function deleteNote(noteElement, id) {
 
     deleteNoteStorage(id);
 }
-function saveNewNote() {}
-function deleteNoteStorage() {}
+
+
+async function deleteNoteStorage() {
+    try{
+        const response = await fetch('notes/delete', {
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify({
+                note_id: id,
+                user_id: LOGGED_IN_USER_ID
+            })
+        });
+        if(response.ok) {
+            console.log(`Nota ID ${id} deletada com sucesso`);
+        } else {
+            const errorText = await response.text();
+            alert(`Erro ao deletar nota ID ${id}` + errorText);
+        }
+    } catch (error) {
+        console.error('Erro na requisição', error);
+        alert('Erro de conexão ao deletar a nota');
+    }
+}
 
 //Botão de adicionar notas
 if(addNoteBtn) {
@@ -61,48 +105,69 @@ if(addNoteBtn) {
 
 //Gerenciar o grupo de notas
 // Obter o ID
+const LOGGED_IN_USER_ID = 1;
 const ulrParams = new URLSearchParams(window.location.search);
-const currentGroupId = ulrParams.get('groupId') || 'defalt-group';
+const currentGroupName = ulrParams.get('groupId') || 'defalt-group';
 
 //Carregar notas do grupo atual
-function loadNotesCurrentGroup() {
+async function loadNotesCurrentGroup() {
     console.log(`Carregando anotações para o grupo: ${currentGroupId}`);
-    const exampleNote = creatNoteElement(101, `Esta é uma nota do grupo: ${currentGroupId}`);
-    notesConteiner.appendChild(exampleNote);
+    try{
+    const response = await fetch(`/notes/get/${currentGroupName}/${LOGGED_IN_USER_ID}`);
+
+    if(response.ok) {
+        const notes = await response.json();
+
+        notesConteiner.innerHTML = '';
+
+        if(notes.length === 0) {
+            console.log('Nenhuma nota encontrada nesse grupo');
+        }
+
+        notes.forEach(note => {
+            const noteElement = creatNoteElement(note.note_id, note.content, note.color);
+            noteElement.style.left = `${note.position_x}px`;
+            noteElement.style.top = `${note.position_y}px`;
+            notesConteiner.appendChild(noteElement);
+        });
+    } else {
+        const errorText = await response.text();
+        console.error('Erro ao buscar notas no servidor', errorText);
+    }
+    } catch (error) {
+        console.error('Erro de conexão ao buscar notas', error);
+    }
 }
-//chamar função
+
 loadNotesCurrentGroup();
-//Script para abrir e fechar o menu de configurações
-//Obter elementos
+
 const confBtn = document.getElementById('settings-open');
 const closeSettingsBtn = document.getElementById('close-settings');
 const settingsPanel = document.getElementById('settings-panel');
-//Função para abrir o painel de configurações
+
 function openSettingsPanel() {
     settingsPanel.classList.add('active');
 }
-//Função para fechar o painel
+
 function closeSettingsPanel() {
     settingsPanel.classList.remove('active');
 }
-//Adicionar os event listeners
+
 confBtn.addEventListener('click', openSettingsPanel);
 closeSettingsBtn.addEventListener('click', closeSettingsPanel);
 
-// Script para alternar entre modo claro e escuro com persistência usando localStorage
-//Obter elementos 
+
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const body = document.body;
-//Chave para o armazenamento local
+
 const storageKey = 'darkModePreference';
-// Função para alternar o modo escuro
+
 function toggleDarkMode() {
     body.classList.toggle('dark-mode');
     const isDarkMode = body.classList.contains('dark-mode');
     localStorage.setItem(storageKey, isDarkMode);
 }
-// Verificar a preferência do usuário no armazenamento local
-//verificar a preferência salva ao carregar a página
+
 function applySavedPreference() {
     const savedPreference = localStorage.getItem(storageKey);
 
@@ -118,22 +183,20 @@ function applySavedPreference() {
         }
     }
 }
-//Adicionar evento de change ao switch
+
 darkModeToggle.addEventListener('change', toggleDarkMode);
 
-//Aplicar a preferência salva ao carregar a página
+
 applySavedPreference();
-//Script para salvar a preferência de modo claro/escuro em todo o aplicativo
-//Script para abrir e fechar o menu de login e criar conta
-//Obter os botões
+
 const loginBtn = document.querySelector('.login-btn');
 const signupBtn = document.querySelector('.signup-btn');
 const closeLoginBtn = document.getElementById('closeLogin');
 const closeSignupBtn = document.getElementById('closeSignup');
-//Obter os formulários
+
 const loginForm = document.getElementById('login-form_table');
 const signupForm = document.getElementById('signup-form_table');
-//Funções para abrir e fechar
+
 function openLoginForm() {
     loginForm.classList.add('active');
     signupForm.classList.remove('active');
@@ -146,17 +209,16 @@ function closeForms() {
     loginForm.classList.remove('active');
     signupForm.classList.remove('active');
 }
-//Adicionar os events listeners
+
 loginBtn.addEventListener('click', openLoginForm);
 signupBtn.addEventListener('click', openSignupForm);
 closeLoginBtn.addEventListener('click', closeForms);
 closeSignupBtn.addEventListener('click', closeForms);
-//Funções para validar os formulários
-//Obter os elementos
+
+
 const loginFormElement = loginForm.querySelector('form');
 const signupFormElement = signupForm.querySelector('form');
-//Validação dos formulários
-//Login
+
 loginFormElement.addEventListener('submit', function(event) {
     if(loginFormElement.checkValidity()) {
         event.preventDefault();
@@ -164,7 +226,7 @@ loginFormElement.addEventListener('submit', function(event) {
         window.location.href = 'groups.html';
     }
 });
-//Cadastro
+
 signupFormElement.addEventListener('submit', function(event) {
     event.preventDefault();
     const username = document.getElementById('new-username').value;

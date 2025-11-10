@@ -8,9 +8,11 @@ http://SEU_ENDEREÇO_IP_LOCAL:3000
 
 [como achar seu IP no mac](https://support.apple.com/pt-br/guide/mac-help/mh141292/mac)
 
+OBS.: ainda não está funcionando
+
 Processos para adicionar
  - criar os post-its
  - permitir a estilização dos post-its
  - salvar as anotações
- - salvar os dados do usuário no banco de dados
+ - salvar os dados do usuário no banco de dados ok
  - criar o ambiente dos grupos
