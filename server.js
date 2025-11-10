@@ -137,7 +137,7 @@ app.post('/notes/get/:group_name/:user_id', (req, res) => {
 
     const sql = 'SELECT * FROM note WHERE group_name = ? AND user_id = ? ORDER BY note_id DESC';
 
-    connection.query(sql [group_name, user_id], (err, results) => {
+    connection.query(sql, [group_name, user_id], (err, results) => {
         if(err) {
             console.error('Erro ao buscar notas', err);
             return res.status(500).send('Erro interno do servidor');

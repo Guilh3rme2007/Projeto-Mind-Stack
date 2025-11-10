@@ -30,6 +30,28 @@ textarea.addEventListener('input', () => updateNoteContent(id, textarea.value));
 return note;
 }
 
+async function updateNoteContent(id, content) {
+    try{
+        const response = await fetch('/notes/update', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                note_id: id,
+                user_id: LOGGED_IN_USER_ID,
+                content: content
+            })
+        });
+        if(response.ok) {
+            console.log(`Conteudo da nota ID ${id} atualizado com sucesso`);
+        } else {
+            const errorText = await response.text();
+            console.error(`Erro ao atualizar conteúdo da nota ID ${id}:`, errorText);
+        }
+    } catch {
+        console.error('Erro de conexão ao atualizar a nota:', error);
+    }
+}
+
 //Adicionar novo post-it
 function addNote() {
 
@@ -72,9 +94,9 @@ function deleteNote(noteElement, id) {
 }
 
 
-async function deleteNoteStorage() {
+async function deleteNoteStorage(id) {
     try{
-        const response = await fetch('notes/delete', {
+        const response = await fetch('/notes/delete', {
             method: 'POST',
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify({
@@ -86,10 +108,10 @@ async function deleteNoteStorage() {
             console.log(`Nota ID ${id} deletada com sucesso`);
         } else {
             const errorText = await response.text();
-            alert(`Erro ao deletar nota ID ${id}` + errorText);
+            alert(`Erro ao deletar nota ID ${id}:` + errorText);
         }
     } catch (error) {
-        console.error('Erro na requisição', error);
+        console.error('Erro na requisição de deleção', error);
         alert('Erro de conexão ao deletar a nota');
     }
 }
