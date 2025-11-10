@@ -26,6 +26,8 @@ create user if not exists 'remote_user'@'%' identified by 'Gu1lh3rm3';
 grant all privileges on mindstack_db.* to 'remote_user'@'%' with grant option;
 flush privileges;
 
+select * from user;
+
 create table if not exists note (
     note_id int auto_increment primary key,
     user_id int not null,
@@ -38,3 +40,5 @@ create table if not exists note (
     update_at timestamp default current_timestamp on update current_timestamp,
     foreign key (user_id) references user(user_id) on delete cascade
 );
+
+select * from note;
