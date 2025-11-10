@@ -1,4 +1,8 @@
 //Script para criar notas
+
+const { text } = require("body-parser");
+const { response } = require("express");
+
 //Obter conteiner de notas e o botão
 const notesConteiner = document.getElementById('notes-conteiner');
 const addNoteBtn = document.getElementById('add-note-btn');
@@ -127,7 +131,7 @@ if(addNoteBtn) {
 
 //Gerenciar o grupo de notas
 // Obter o ID
-const LOGGED_IN_USER_ID = 1;
+const LOGGED_IN_USER_ID = localStorage.getItem('mindstack_user_id') || 1;
 const ulrParams = new URLSearchParams(window.location.search);
 const currentGroupName = ulrParams.get('groupId') || 'defalt-group';
 
@@ -242,11 +246,36 @@ const loginFormElement = loginForm.querySelector('form');
 const signupFormElement = signupForm.querySelector('form');
 
 loginFormElement.addEventListener('submit', function(event) {
-    if(loginFormElement.checkValidity()) {
-        event.preventDefault();
-        alert('Login realizado co sucesso!');
-        window.location.href = 'groups.html';
-    }
+    event.preventDefault()
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            password: password
+        })
+        .then(response => {
+            if(!response.ok) {
+                return response.text().then(text => {throw new Error(text)});
+            }
+            return response.json();
+        })
+        .then(data => {
+            localStorage.setItem('mindstack_user_id', data.user_id);
+            alert('Login realizado com sucesso');
+            window.location.href = 'groups.html';
+        })
+        .catch(error => {
+            alert('Erro no login: ' + error.message);
+        })
+    });
+
 });
 
 signupFormElement.addEventListener('submit', function(event) {

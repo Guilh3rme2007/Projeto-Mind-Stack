@@ -52,6 +52,30 @@ app.post('/insertUser', (req, res) =>{
 
 });
 
+app.post('/login', (req, res) =>{
+    const {email, password} =req.body;
+
+    if(!email || !password) {
+        return res.status(400).send('Email e senha são obrigatórios');
+    }
+    const sql = 'SELECT user_id, password, FROM user WHERE email = ?';
+    connection.query(sql, [email], (err, results) => {
+        if(err){
+            console.error('Erro na busca do login:', err);
+            return res.status(500).send('Erro interno do servidor');
+        }
+        if(results.length === 0) {
+            return res.status(401).send('Email ou senha inválidos');
+        }
+        const user = results[0];
+
+        if(user.password !== password) {
+            return res.status(401).send('Email ou senha inválidos');
+        }
+        res.status(200).json({user_id: user.user_id, message: 'Login realizado com sucesso'});
+    });
+});
+
 
 app.get('/first.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'first.html'));
@@ -64,7 +88,14 @@ app.listen(PORT, '0.0.0.0', () => {
 });
 
 app.post('/notes/create', (req, res) => {
-    const {user_id, group_name, content = '', color = '#ffff76ff', position_x = 0, position_y = 0} = req.body;
+    const {
+        user_id,
+        group_name,
+        content = '', 
+        color = '#ffff76ff', 
+        position_x = 0, 
+        position_y = 0
+    } = req.body;
 
     if(!user_id || !group_name) {
         return res.status(400).send('Dados incompletos');
