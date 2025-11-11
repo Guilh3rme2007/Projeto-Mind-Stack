@@ -120,12 +120,13 @@ app.post('/notes/update', (req, res) => {
     if(!note_id || !user_id) {
         return res.status(400).send('Dados incompletos');
     }
-    const sql = 'UPDATE note SET content = ?, color = ?, position_x = ?, position_y = ? WHERE note_id = ? AND user_id = ?';
-
+    
     const updateContent = content !== undefined ? content: null;
     const updateColor = color !== undefined ? color: '#ffff76ff';
     const updateX = position_x !== undefined ? position_x: 0;
     const updateY = position_y !== undefined ? position_y: 0;
+
+    const sql = 'UPDATE note SET content = ?, color = ?, position_x = ?, position_y = ? WHERE note_id = ? AND user_id = ?';
 
     connection.query(sql, [updateContent, updateColor, updateX, updateY, note_id, user_id], (err, result) => {
         if(err) {

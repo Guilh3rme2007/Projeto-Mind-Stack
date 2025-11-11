@@ -18,8 +18,73 @@ function creatNoteElement(id, content = '', color = '#ffff76ff') {
     deleteBtn.classList.add('delete-note-btn');
     deleteBtn.textContent = 'X';
 
+    const colorInput = document.createElement('input');
+    colorInput.type = 'color';
+    colorInput.classList.add('note-color-picker');
+    colorInput.value = color;
+
+    colorInput.addEventListener('change', (e) => {
+        const newColor = e.target.value;
+        note.style.backgroundColor = newColor;
+        updateNoteColor(id, newColor);
+    })
+
     note.appendChild(textarea);
     note.appendChild(deleteBtn);
+    note.appendChild(colorInput);
+
+    let isDragging = false;
+    let initialX, initialY, xOffset = 0, yOffset = 0;
+
+    note.addEventListener('mousedown', dragStart);
+
+    function dragStart(e) {
+        if(e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') {
+            return;
+        }
+
+        isDragging = true;
+
+        note.style.zIndex = 1000;
+
+        initialX = e.clientX;
+        initialY = e.clientY;
+
+        xOffset = note.offsetLeft;
+        yOffset = note.offsetTop;
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+    }
+
+    function drag(e) {
+        if(isDragging) {
+            const dx = e.clientX - initialX;
+            const dy = e.clientY - initialY;
+
+            let newX = xOffset + dx;
+            let newY = yOffset + dy;
+
+            note.style.left = `${newX}px`;
+            note.style.top = `${newY}px`;
+        }
+    }
+
+    function dragEnd(e) {
+        if(isDragging){
+            isDragging = false;
+            note.style.zIndex = 10;
+
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('mouseup', dragEnd);
+
+            const noteId = note.getAttribute('data-id');
+            const finalX = note.offsetLeft;
+            const finalY = note.offsetTop;
+
+            updateNotePositon(noteId, finalX, finalY);
+        }
+    }
 
 
 deleteBtn.addEventListener('click', () => deleteNote(note, id));
@@ -50,6 +115,51 @@ async function updateNoteContent(id, content) {
         }
     } catch {
         console.error('Erro de conexão ao atualizar a nota:', error);
+    }
+}
+
+async function updateNotePositon(id, position_x, position_y) {
+    try {
+        const response = await fetch('/notes/update', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                note_id: id,
+                user_id: LOGGED_IN_USER_ID,
+                position_x: position_x,
+                position_y: position_y
+            })
+        });
+        if(response.ok) {
+            console.log(`Posição da note ID ${id} atualizada com sucesso`);
+        } else {
+            const errorText = await response.text();
+            console.error(`Erro ao atualizar posição da nota ID ${id}: `, errorText);
+        }
+    } catch (error) {
+        console.error('Erro de conexão ao atualizar a posição', error);
+    }
+}
+
+async function updateNoteColor(id, newColor) {
+    try{
+        const response = await fetch('/notes/update', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                note_id: id,
+                user_id: LOGGED_IN_USER_ID,
+                color: newColor
+            })
+        });
+        if(response.ok) {
+            console.log(`Cor da nota ID ${id} atualizada com sucesso para: ${newColor}`);
+        } else {
+            const errorText = await response.text();
+            console.error(`Erro ao atualizar a cor da nota ID ${id}`, errorText);
+        }
+    } catch (error) {
+        console.error(`Erro de conexão ao atualizar a cor`, error);
     }
 }
 

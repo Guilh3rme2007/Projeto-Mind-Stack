@@ -10,6 +10,7 @@
     --form-input-bg: transparent;
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --close-btn-color: #aaa;
+    --drag-post-it-border: #0000.2;
 }
 /*Estilos Globais*/
 body {
@@ -282,6 +283,73 @@ input:checked + .slider:before {
     cursor: pointer;
 }
 
+#notes-conteiner {
+    position: relative;
+    min-height: 500px;
+    width: 100%;
+}
+
+.post-it {
+    position: absolute;
+    min-width: 250px;
+    min-height: 150px;
+    padding: 10px;
+    box-shadow: 1px 1px 8px var(--drag-post-it-border);
+    cursor: move;
+    transition: box-shadow 0.2s;
+    font-family: var(--font-family);
+    box-sizing: border-box;
+}
+
+.post-it:hover {
+    box-shadow: 3px 3px 13px var(--drag-post-it-border);
+}
+
+.note-content {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.delete-note-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: transparent;
+    border: none;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.note-color-picker {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+
+    appearance: none;
+}
+
+.note-color-picker :-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.note-color-picker :-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
 /*Modo escuro*/
 
 body.dark-mode {
@@ -295,4 +363,5 @@ body.dark-mode {
     --close-btn-color: #888;
     --form-text-color: #ffffff;
     --form-input-bg: transparent;
+    --drag-post-it-border: #777778;
 }
