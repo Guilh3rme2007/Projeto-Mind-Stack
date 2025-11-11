@@ -407,6 +407,7 @@ loginFormElement.addEventListener('submit', function(event) {
             email: email,
             password: password
         })
+    })
         .then(response => {
             if(!response.ok) {
                 return response.text().then(text => {throw new Error(text)});
@@ -422,8 +423,6 @@ loginFormElement.addEventListener('submit', function(event) {
             alert('Erro no login: ' + error.message);
         })
     });
-
-});
 
 signupFormElement.addEventListener('submit', function(event) {
     event.preventDefault();
