@@ -160,21 +160,60 @@ app.post('/notes/delete', (req, res) => {
     });
 });
 
-app.get('/notes/get/:group_name/:user_id', (req, res) => {
-    const {group_name, user_id} = req.params;
+app.get('/notes/get/:group_id/:user_id', (req, res) => {
+    const {group_name: group_id, user_id} = req.params;
 
-    if(!group_name || !user_id) {
+    if(!group_id || !user_id) {
         return res.status(400).send('Dados incompletos');
     }
 
-    const sql = 'SELECT * FROM note WHERE group_name = ? AND user_id = ? ORDER BY note_id DESC';
+    const sql = 'SELECT * FROM note WHERE group_id = ? AND user_id = ? ORDER BY note_id DESC';
 
-    connection.query(sql, [group_name, user_id], (err, results) => {
+    connection.query(sql, [group_id, user_id], (err, results) => {
         if(err) {
             console.error('Erro ao buscar notas', err);
             return res.status(500).send('Erro interno do servidor');
         }
         
         res.status(200).json(results);
+    });
+});
+
+app.post('/groups/create', (req, res) => {
+    const {user_id, group_name} = req.body;
+
+    if(!user_id || !group_name) {
+        return res.status(400).send('Dados incompletos');
+    }
+    
+    const sql = 'INSERT INTO note_group (user_id, group_name) VALUES (?, ?)';
+
+    connection.query(sql, [user_id, group_name], (err, result) => {
+        if(err) {
+            console.error('Erro ao criar grupo', err);
+            if(err.code === 'ER_DUP_ENTRY') {
+                return res.status(409).send('Você já tem um grupo com esse nome');
+            }
+            return res.status(500).send('Erro interno do servidor');
+        }
+        return res.status(201).json({ group_id: result.insertId, message: 'Grupo criado com sucesso'});
+    });
+});
+
+app.get('/groups/get/:user_id', (req, res) => {
+    const {user_id} = req.params;
+
+    if(!user_id) {
+        return res.status(400).send('ID do usuário é obrigatório');
+    }
+
+    const sql = 'SELECT group_id, group_name FROM note_group WHERE user_id = ? ORDER BY created_at DESC';
+
+    connection.query(sql, [user_id], (err, result) => {
+        if(err) {
+            console.error('Erro ao buscar grupos', err);
+            return res.status(500).send('Erro interno do servidor');
+        }
+        res.status(200).json(result);
     });
 });

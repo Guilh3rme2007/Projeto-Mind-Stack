@@ -18,7 +18,8 @@ select * from user;
 create table if not exists note (
     note_id int auto_increment primary key,
     user_id int not null,
-    group_name varchar(100) not null,
+    group_id int not null,
+    foreign key (group_id) references note_group(group_id) on delete cascade,
     content TEXT,
     color varchar(10) default '#ffff76ff',
     position_x int default 0,
@@ -29,6 +30,17 @@ create table if not exists note (
 );
 
 select * from note;
+
+create table if not exists note_group (
+    group_id int auto_increment primary key,
+    user_id int not null,
+    group_name varchar (100) not null,
+    created_at timestamp default current_timestamp,
+    unique key unique_user_group (user_id, group_name),
+    foreign key (user_id) references user(user_id) on delete cascade
+);
+
+select * from note_group;
 
 DELIMITER//
 create procedure insertUser(

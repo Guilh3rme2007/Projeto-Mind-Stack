@@ -188,7 +188,7 @@ label{
 .settings-panel.active {
     display: block;
     transform: scale(1);
-    z-index: 5; 
+    z-index: 20; 
 }
 .setting-option {
     margin: 15px 0;
@@ -215,10 +215,17 @@ label{
     color: var(--text-color);
     text-decoration: none;
     font-family: var(--font-family);
+    
 }
 
 .setting_info {
     color: var(--text-color);
+}
+
+#about-me {
+    background-size: contain;
+    background-color: var(--bg-color);
+    border-radius: 13%;
 }
 
 /*Switch*/

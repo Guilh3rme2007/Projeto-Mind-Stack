@@ -176,7 +176,7 @@ async function saveNewNote() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 user_id: LOGGED_IN_USER_ID,
-                group_name: currentGroupName,
+                group_name: currentGroupId,
                 content: '',
                 color: '#ffff76ff'
             })
@@ -239,13 +239,13 @@ if(addNoteBtn) {
 //Gerenciar o grupo de notas
 // Obter o ID
 const ulrParams = new URLSearchParams(window.location.search);
-const currentGroupName = ulrParams.get('groupId') || 'defalt-group';
+const currentGroupId = ulrParams.get('groupId') || 1;
 
 //Carregar notas do grupo atual
 async function loadNotesCurrentGroup() {
-    console.log(`Carregando anotações para o grupo: ${currentGroupName}`);
+    console.log(`Carregando anotações para o grupo: ${currentGroupId}`);
     try{
-    const response = await fetch(`/notes/get/${currentGroupName}/${LOGGED_IN_USER_ID}`);
+    const response = await fetch(`/notes/get/${currentGroupId}/${LOGGED_IN_USER_ID}`);
 
     if(response.ok) {
         const notes = await response.json();
@@ -272,6 +272,34 @@ async function loadNotesCurrentGroup() {
 }
 
 loadNotesCurrentGroup();
+
+const groupsConteiner = document.getElementById('groups-list');
+
+async function LoadGroups() {
+    try {
+        const response = await fetch(`/groups/get/${LOGGED_IN_USER_ID}`);
+        if(response.ok) {
+            const groups = await response.json();
+            groupsConteiner.innerHTML = '';
+
+            groups.forEach(group =>  {
+                const groupElement = document.createElement('a');
+                groupElement.href = `first.html?groupId=${group.group_id}`;
+                groupElement.classList.add('group-link');
+                groupElement.textContent = group.group_name;
+                groupsConteiner.appendChild(groupElement);
+            });
+        } else {
+            console.error('Erro ao carregar grupos:', await response.text());
+        }
+    } catch(error) {
+        console.error('Erro de conexão ao carregar grupos', error);
+    }
+}
+
+if(window.location.pathname.includes('groups.html')) {
+    LoadGroups();
+}
 
 const confBtn = document.getElementById('settings-open');
 const closeSettingsBtn = document.getElementById('close-settings');
