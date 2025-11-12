@@ -472,16 +472,15 @@ const closeGroupModalBtn = document.getElementById('close-group-modal');
 const saveGroupForm = document.getElementById('save-group-form');
 const goToGroupBtn = document.getElementById('go-to-group-btn');
 const saveGroupBtn = document.getElementById('save-group-btn');
-con
 
 function openGroupModal () {
     if(groupManagerModal) { 
-        groupManagerModal.style.display = 'block';
+        groupManagerModal.classList.add('active');
     }
 }
 function closeGroupModal() {
     if(groupManagerModal) {
-        groupManagerModal.style.display = 'none';
+        groupManagerModal.classList.remove('active');
     }
 }
 
@@ -497,7 +496,7 @@ if(closeGroupModalBtn) {
 }
 
 window.addEventListener('click', (event) => {
-    if(event.target === groupManagerModal) {
+    if(event.target === groupManagerModal && groupManagerModal.classList.contains('active')) {
         closeGroupModal();
     }
 });

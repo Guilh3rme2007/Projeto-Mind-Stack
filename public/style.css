@@ -380,10 +380,14 @@ input:checked + .slider:before {
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     transform: scale(0.95);
     display: none;
+    opacity: 0;
     z-index: -5; 
 }
 .modal:active {
-    z-index: 5;
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+    z-index: 8;
 }
 /*Modo escuro*/
 
