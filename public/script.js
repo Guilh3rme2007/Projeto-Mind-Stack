@@ -1,6 +1,40 @@
-//Obter conteiner de notas e o botão
 const notesConteiner = document.getElementById('notes-conteiner');
 const addNoteBtn = document.getElementById('add-note-btn');
+
+const LOGGED_IN_USER_ID = localStorage.getItem('mindstack_user_id') || 1;
+
+const ulrParams = new URLSearchParams(window.location.search);
+const currentGroupId = ulrParams.get('groupId') || 1;
+
+const groupsConteiner = document.getElementById('groups-list');
+
+const confBtn = document.getElementById('settings-open');
+const closeSettingsBtn = document.getElementById('close-settings');
+const settingsPanel = document.getElementById('settings-panel');
+
+const loginBtn = document.querySelector('.login-btn');
+const signupBtn = document.querySelector('.signup-btn');
+const closeLoginBtn = document.getElementById('closeLogin');
+const closeSignupBtn = document.getElementById('closeSignup');
+
+const loginForm = document.getElementById('login-form_table');
+const signupForm = document.getElementById('signup-form_table');
+
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const body = document.body;
+
+const storageKey = 'darkModePreference';
+
+const loginFormElement = loginForm.querySelector('form');
+const signupFormElement = signupForm.querySelector('form');
+
+
+const groupManagerModal = document.getElementById('group-manager-modal');
+const closeGroupModalBtn = document.getElementById('close-group-modal');
+const saveGroupForm = document.getElementById('save-group-form');
+const goToGroupsBtn = document.getElementById('go-to-groups-btn');
+const saveGroupBtn = document.getElementById('save-group-btn');
+
 
 //Criar elemento no HTML
 function creatNoteElement(id, content = '', color = '#ffff76ff') {
@@ -94,7 +128,6 @@ textarea.addEventListener('input', () => updateNoteContent(id, textarea.value));
 return note;
 }
 
-const LOGGED_IN_USER_ID = localStorage.getItem('mindstack_user_id') || 1;
 
 async function updateNoteContent(id, content) {
     try{
@@ -238,9 +271,6 @@ if(addNoteBtn) {
 
 //Gerenciar o grupo de notas
 // Obter o ID
-const ulrParams = new URLSearchParams(window.location.search);
-const currentGroupId = ulrParams.get('groupId') || 1;
-
 //Carregar notas do grupo atual
 async function loadNotesCurrentGroup() {
     console.log(`Carregando anotações para o grupo: ${currentGroupId}`);
@@ -273,7 +303,6 @@ async function loadNotesCurrentGroup() {
 
 loadNotesCurrentGroup();
 
-const groupsConteiner = document.getElementById('groups-list');
 
 async function LoadGroups() {
     try {
@@ -301,10 +330,6 @@ if(window.location.pathname.includes('groups.html')) {
     LoadGroups();
 }
 
-const confBtn = document.getElementById('settings-open');
-const closeSettingsBtn = document.getElementById('close-settings');
-const settingsPanel = document.getElementById('settings-panel');
-
 function openSettingsPanel() {
     settingsPanel.classList.add('active');
 }
@@ -316,11 +341,6 @@ function closeSettingsPanel() {
 confBtn.addEventListener('click', openSettingsPanel);
 closeSettingsBtn.addEventListener('click', closeSettingsPanel);
 
-
-const darkModeToggle = document.getElementById('dark-mode-toggle');
-const body = document.body;
-
-const storageKey = 'darkModePreference';
 
 function toggleDarkMode() {
     body.classList.toggle('dark-mode');
@@ -349,13 +369,6 @@ darkModeToggle.addEventListener('change', toggleDarkMode);
 
 applySavedPreference();
 
-const loginBtn = document.querySelector('.login-btn');
-const signupBtn = document.querySelector('.signup-btn');
-const closeLoginBtn = document.getElementById('closeLogin');
-const closeSignupBtn = document.getElementById('closeSignup');
-
-const loginForm = document.getElementById('login-form_table');
-const signupForm = document.getElementById('signup-form_table');
 
 function openLoginForm() {
     loginForm.classList.add('active');
@@ -382,15 +395,6 @@ if(closeLoginBtn) {
 if(closeSignupBtn) {
     closeSignupBtn.addEventListener('click', closeForms);
 }
-
-loginBtn.addEventListener('click', openLoginForm);
-signupBtn.addEventListener('click', openSignupForm);
-closeLoginBtn.addEventListener('click', closeForms);
-closeSignupBtn.addEventListener('click', closeForms);
-
-
-const loginFormElement = loginForm.querySelector('form');
-const signupFormElement = signupForm.querySelector('form');
 
 loginFormElement.addEventListener('submit', function(event) {
     event.preventDefault()
@@ -466,13 +470,6 @@ signupFormElement.addEventListener('submit', function(event) {
     }
 });
 
-const manageGroupsBtn = document.getElementById('group-manager-btn');
-const groupManagerModal = document.getElementById('group-manager-modal');
-const closeGroupModalBtn = document.getElementById('close-group-modal');
-const saveGroupForm = document.getElementById('save-group-form');
-const goToGroupsBtn = document.getElementById('go-to-groups-btn');
-const saveGroupBtn = document.getElementById('save-group-btn');
-
 function openGroupModal () {
     if(groupManagerModal) { 
         groupManagerModal.classList.add('active');
@@ -488,11 +485,8 @@ if(saveGroupBtn) {
     saveGroupBtn.addEventListener('click', openGroupModal);
 }
 
-if(manageGroupsBtn) {
-    manageGroupsBtn.addEventListener('click', openGroupModal);
-}
-if(closeGroupsModalBtn) {
-    closeGroupsModalBtn.addEventListener('click', closeGroupModal);
+if(closeGroupModalBtn) {
+    closeGroupModalBtn.addEventListener('click', closeGroupModal);
 }
 
 window.addEventListener('click', (event) => {
@@ -501,8 +495,8 @@ window.addEventListener('click', (event) => {
     }
 });
 
-if(goToGroupBtn) {
-    goToGroupBtn.addEventListener('click', () => {
+if(goToGroupsBtn) {
+    goToGroupsBtn.addEventListener('click', () => {
         window.location.href = 'groups.html';
     });
 }
