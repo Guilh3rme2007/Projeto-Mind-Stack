@@ -383,7 +383,7 @@ input:checked + .slider:before {
     opacity: 0;
     z-index: -5; 
 }
-.modal:active {
+.modal.active {
     display: block;
     opacity: 1;
     transform: scale(1);
