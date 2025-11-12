@@ -365,7 +365,7 @@ input:checked + .slider:before {
     background-color: var(--btn-bg-color);
     font-size: 108%;
     cursor: pointer;
-    
+    margin: 2px;
 }
 .modal {
     background-color: var(--form-bg);
