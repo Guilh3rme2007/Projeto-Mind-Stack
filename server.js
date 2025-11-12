@@ -90,20 +90,20 @@ app.listen(PORT, '0.0.0.0', () => {
 app.post('/notes/create', (req, res) => {
     const {
         user_id,
-        group_name,
+        group_id,
         content = '', 
         color = '#ffff76ff', 
         position_x = 0, 
         position_y = 0
     } = req.body;
 
-    if(!user_id || !group_name) {
+    if(!user_id || !group_id) {
         return res.status(400).send('Dados incompletos');
     }
 
-    const sql = 'INSERT INTO note (user_id, group_name, content, color, position_x, position_y) VALUES (?, ?, ?, ?, ?, ?)';
+    const sql = 'INSERT INTO note (user_id, group_id, content, color, position_x, position_y) VALUES (?, ?, ?, ?, ?, ?)';
 
-    connection.query(sql, [user_id, group_name, content, color, position_x, position_y], (err, result) => {
+    connection.query(sql, [user_id, group_id, content, color, position_x, position_y], (err, result) => {
         if(err) {
             console.error('Erro ao criar nota', err);
             return res.status(500).send('Erro interno ao criar nota');
@@ -161,7 +161,7 @@ app.post('/notes/delete', (req, res) => {
 });
 
 app.get('/notes/get/:group_id/:user_id', (req, res) => {
-    const {group_name: group_id, user_id} = req.params;
+    const {group_id, user_id} = req.params;
 
     if(!group_id || !user_id) {
         return res.status(400).send('Dados incompletos');

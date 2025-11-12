@@ -176,7 +176,7 @@ async function saveNewNote() {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
                 user_id: LOGGED_IN_USER_ID,
-                group_name: currentGroupId,
+                group_id: currentGroupId,
                 content: '',
                 color: '#ffff76ff'
             })
@@ -470,7 +470,7 @@ const manageGroupsBtn = document.getElementById('group-manager-btn');
 const groupManagerModal = document.getElementById('group-manager-modal');
 const closeGroupModalBtn = document.getElementById('close-group-modal');
 const saveGroupForm = document.getElementById('save-group-form');
-const goToGroupBtn = document.getElementById('go-to-group-btn');
+const goToGroupsBtn = document.getElementById('go-to-groups-btn');
 const saveGroupBtn = document.getElementById('save-group-btn');
 
 function openGroupModal () {
@@ -491,8 +491,8 @@ if(saveGroupBtn) {
 if(manageGroupsBtn) {
     manageGroupsBtn.addEventListener('click', openGroupModal);
 }
-if(closeGroupModalBtn) {
-    closeGroupModalBtn.addEventListener('click', closeGroupModal);
+if(closeGroupsModalBtn) {
+    closeGroupsModalBtn.addEventListener('click', closeGroupModal);
 }
 
 window.addEventListener('click', (event) => {
