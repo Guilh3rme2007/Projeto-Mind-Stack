@@ -10,7 +10,8 @@ const connection = mysql.createConnection({
     host: '127.0.0.1',
     user: 'root',
     database: 'MindStack_DB',
-    port: 3306
+    port: 3306,
+    password: 'Guilh3rme2007'
 });
 
 connection.connect(err => {
