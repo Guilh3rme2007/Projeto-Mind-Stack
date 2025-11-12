@@ -8,8 +8,7 @@
     <link rel="shortcut icon" href="imagens/favicon.ico" type="image/x-icon">
 </head>
 <body>
-    
-    <button id="group-manager-btn" class="manager-group-btn">Salvar Quadro</button>
+
 
     <button id="settings-open" class="hamburger-btn">&#x2699;&#xFE0F;</button>
     
@@ -48,8 +47,32 @@
     <div class="add_post-it">
         <button class="add_btn" id="add-note-btn">Adicionar +</button>
     </div>
+    
+    <div class="save-group">
+        <button class="save_button" id="save-group-btn">Salvar Quadro</button>
+    </div>
 
     <div id="notes-conteiner">
+    </div>
+
+    
+    <div id="group-manager-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-group-modal">&times;</span>
+
+            <form id="save-group-form">
+                <h3>Salvar Quadro atual</h3>
+                <p>
+                    <label for="new-group-name">Nome do Quadro: </label>
+                    <input type="text" id="new-group-name" name="new-group-name" required placeholder="Ex.: Tarefas da Semana">
+                </p>
+                <button type="submit" class="form-btn">Salvar Quadro</button>
+            </form>
+            <hr>
+            <p class="button-container">
+                <button id="go-to-groups-btn" class="form-btn secondary-btn">Ver Todos os Quadros</button>
+            </p>
+        </div>
     </div>
 
     <script src="script.js"></script>

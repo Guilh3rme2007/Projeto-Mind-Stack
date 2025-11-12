@@ -11,6 +11,7 @@
     --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --close-btn-color: #aaa;
     --drag-post-it-border: #0000.2;
+    --btn-bg-color: #ffff29;
 }
 /*Estilos Globais*/
 body {
@@ -284,7 +285,7 @@ input:checked + .slider:before {
 .add_btn {
     border: none;
     padding: 3%;
-    background-color: rgb(255, 255, 41);
+    background-color: var(--btn-bg-color);
     font-size: 108%;
     cursor: pointer;
 }
@@ -356,6 +357,34 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
+
+/*Salvar grupo*/
+.save_button {
+    border: none;
+    padding: 0.9% 0.6%;
+    background-color: var(--btn-bg-color);
+    font-size: 108%;
+    cursor: pointer;
+    
+}
+.modal {
+    background-color: var(--form-bg);
+    color: var(--form-text-color);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px var(--drag-post-it-border);
+    width: 300px;
+    position: fixed;
+    top: 5%;
+    right: 1%;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: scale(0.95);
+    display: none;
+    z-index: -5; 
+}
+.modal:active {
+    z-index: 5;
+}
 /*Modo escuro*/
 
 body.dark-mode {

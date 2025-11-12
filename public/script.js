@@ -465,3 +465,81 @@ signupFormElement.addEventListener('submit', function(event) {
         signupFormElement.reportValidity();
     }
 });
+
+const manageGroupsBtn = document.getElementById('group-manager-btn');
+const groupManagerModal = document.getElementById('group-manager-modal');
+const closeGroupModalBtn = document.getElementById('close-group-modal');
+const saveGroupForm = document.getElementById('save-group-form');
+const goToGroupBtn = document.getElementById('go-to-group-btn');
+const saveGroupBtn = document.getElementById('save-group-btn');
+con
+
+function openGroupModal () {
+    if(groupManagerModal) { 
+        groupManagerModal.style.display = 'block';
+    }
+}
+function closeGroupModal() {
+    if(groupManagerModal) {
+        groupManagerModal.style.display = 'none';
+    }
+}
+
+if(saveGroupBtn) {
+    saveGroupBtn.addEventListener('click', openGroupModal);
+}
+
+if(manageGroupsBtn) {
+    manageGroupsBtn.addEventListener('click', openGroupModal);
+}
+if(closeGroupModalBtn) {
+    closeGroupModalBtn.addEventListener('click', closeGroupModal);
+}
+
+window.addEventListener('click', (event) => {
+    if(event.target === groupManagerModal) {
+        closeGroupModal();
+    }
+});
+
+if(goToGroupBtn) {
+    goToGroupBtn.addEventListener('click', () => {
+        window.location.href = 'groups.html';
+    });
+}
+
+if(saveGroupForm) {
+    saveGroupForm.addEventListener('submit' ,async (event) => {
+        event.preventDefault();
+
+        const groupNameInput = document.getElementById('new-group-name');
+        const newGroupName = groupNameInput.value.trim();
+
+        if(!newGroupName) {
+            alert('Por favor, digite um nome para o quadro');
+            return;
+        }
+        try {
+            const response = await fetch('/groups/create', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_id: LOGGED_IN_USER_ID,
+                    group_name: newGroupName
+                })
+            });
+            if(response.ok) {
+                const data = await response.json();
+                alert(`Quadro ${newGroupName} salvo com sucesso`);
+
+                window.location.href = 'groups.html';
+            } else {
+                const errorText = await response.text();
+                alert(`Erro ao salvar quadro: ${errorText}`);
+            }
+        } catch(error) {
+            console.error('Erro de conexão ao salvar quadro:', error);
+            alert('Erro de conexão com o servidor');
+        }
+    })
+}
