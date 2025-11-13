@@ -4,6 +4,8 @@ const LOGGED_IN_USER_ID = localStorage.getItem('mindstack_user_id') || 1;
 const ulrParams = new URLSearchParams(window.location.search);
 const currentGroupId = ulrParams.get('groupId') || 1;
 
+const loginFormElement = loginForm.querySelector('form');
+const signupFormElement = signupForm.querySelector('form');
 
 document.addEventListener('DOMContentLoaded', () => {
 const notesConteiner = document.getElementById('notes-conteiner');
@@ -28,8 +30,6 @@ const body = document.body;
 
 const storageKey = 'darkModePreference';
 
-const loginFormElement = loginForm.querySelector('form');
-const signupFormElement = signupForm.querySelector('form');
 
 
 const groupManagerModal = document.getElementById('group-manager-modal');
@@ -206,8 +206,6 @@ if(saveGroupForm) {
 });
 
 
-
-//Criar elemento no HTML
 function creatNoteElement(id, content = '', color = '#ffff76ff') {
     const note = document.createElement('div');
     note.classList.add('post-it');
@@ -299,7 +297,6 @@ textarea.addEventListener('input', () => updateNoteContent(id, textarea.value));
 return note;
 }
 
-
 async function updateNoteContent(id, content) {
     try{
         const response = await fetch('/notes/update', {
@@ -367,7 +364,6 @@ async function updateNoteColor(id, newColor) {
     }
 }
 
-//Adicionar novo post-it
 function addNote() {
 
     saveNewNote();
@@ -407,7 +403,6 @@ function deleteNote(noteElement, id) {
 
     deleteNoteStorage(id);
 }
-
 
 async function deleteNoteStorage(id) {
     try{
@@ -482,7 +477,6 @@ async function LoadGroups() {
     }
 }
 
-
 function openSettingsPanel() {
     settingsPanel.classList.add('active');
 }
@@ -514,7 +508,6 @@ function applySavedPreference() {
         }
 }
 
-
 function openLoginForm() {
     loginForm.classList.add('active');
     signupForm.classList.remove('active');
@@ -527,8 +520,6 @@ function closeForms() {
     loginForm.classList.remove('active');
     signupForm.classList.remove('active');
 }
-
-
 
 function openGroupModal () {
     if(groupManagerModal) { 
