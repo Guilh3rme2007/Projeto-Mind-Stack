@@ -1,10 +1,13 @@
-const notesConteiner = document.getElementById('notes-conteiner');
-const addNoteBtn = document.getElementById('add-note-btn');
 
 const LOGGED_IN_USER_ID = localStorage.getItem('mindstack_user_id') || 1;
 
 const ulrParams = new URLSearchParams(window.location.search);
 const currentGroupId = ulrParams.get('groupId') || 1;
+
+
+document.addEventListener('DOMContentLoaded', () => {
+const notesConteiner = document.getElementById('notes-conteiner');
+const addNoteBtn = document.getElementById('add-note-btn');
 
 const groupsConteiner = document.getElementById('groups-list');
 
@@ -34,6 +37,174 @@ const closeGroupModalBtn = document.getElementById('close-group-modal');
 const saveGroupForm = document.getElementById('save-group-form');
 const goToGroupsBtn = document.getElementById('go-to-groups-btn');
 const saveGroupBtn = document.getElementById('save-group-btn');
+
+
+if(addNoteBtn) {
+    addNoteBtn.addEventListener('click', addNote);
+}
+
+if(window.location.pathname.includes('groups.html')) {
+    LoadGroups();
+}
+
+loadNotesCurrentGroup();
+
+
+confBtn.addEventListener('click', openSettingsPanel);
+closeSettingsBtn.addEventListener('click', closeSettingsPanel);
+
+
+darkModeToggle.addEventListener('change', toggleDarkMode);
+
+
+applySavedPreference();
+
+if(loginBtn) {
+    loginBtn.addEventListener('click', openLoginForm);
+}
+if(signupBtn) {
+    signupBtn.addEventListener('click', openSignupForm);
+}
+if(closeLoginBtn) {
+    closeLoginBtn.addEventListener('click', closeForms);
+}
+if(closeSignupBtn) {
+    closeSignupBtn.addEventListener('click', closeForms);
+}
+
+loginFormElement.addEventListener('submit', function(event) {
+    event.preventDefault()
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            password: password
+        })
+    })
+        .then(response => {
+            if(!response.ok) {
+                return response.text().then(text => {throw new Error(text)});
+            }
+            return response.json();
+        })
+        .then(data => {
+            localStorage.setItem('mindstack_user_id', data.user_id);
+            alert('Login realizado com sucesso');
+            window.location.href = 'groups.html';
+        })
+        .catch(error => {
+            alert('Erro no login: ' + error.message);
+        })
+    });
+
+signupFormElement.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('new-username').value;
+    const email = document.getElementById('new-email').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('new-password-confirm').value;
+    if(newPassword !== confirmPassword) {
+            alert('Erro: Senhas diferentes');
+            return;
+    }
+
+    if(signupFormElement.checkValidity()) {
+        const urlEncodedData = new URLSearchParams();
+        urlEncodedData.append('new-username', username);
+        urlEncodedData.append('new-email', email);
+        urlEncodedData.append('new-password', newPassword);
+
+        fetch('/insertUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+        },
+            body: urlEncodedData
+        })
+        .then(response => {
+            if(!response.ok) {
+                return response.text().then(text => {throw new Error(text)});
+            }
+            return response.text();
+        })
+        .then(data => {
+            alert('Cadastro realizado com sucesso!' + data);
+            window.location.href = 'first.html';
+        })
+        .catch(error => {
+            alert('Erro ao cadastrar: ' + error.message);
+        });
+    } else {
+        signupFormElement.reportValidity();
+    }
+});
+
+
+if(saveGroupBtn) {
+    saveGroupBtn.addEventListener('click', openGroupModal);
+}
+
+if(closeGroupModalBtn) {
+    closeGroupModalBtn.addEventListener('click', closeGroupModal);
+}
+
+window.addEventListener('click', (event) => {
+    if(event.target === groupManagerModal && groupManagerModal.classList.contains('active')) {
+        closeGroupModal();
+    }
+});
+
+if(goToGroupsBtn) {
+    goToGroupsBtn.addEventListener('click', () => {
+        window.location.href = 'groups.html';
+    });
+}
+
+if(saveGroupForm) {
+    saveGroupForm.addEventListener('submit' ,async (event) => {
+        event.preventDefault();
+
+        const groupNameInput = document.getElementById('new-group-name');
+        const newGroupName = groupNameInput.value.trim();
+
+        if(!newGroupName) {
+            alert('Por favor, digite um nome para o quadro');
+            return;
+        }
+        try {
+            const response = await fetch('/groups/create', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_id: LOGGED_IN_USER_ID,
+                    group_name: newGroupName
+                })
+            });
+            if(response.ok) {
+                const data = await response.json();
+                alert(`Quadro ${newGroupName} salvo com sucesso`);
+
+                window.location.href = 'groups.html';
+            } else {
+                const errorText = await response.text();
+                alert(`Erro ao salvar quadro: ${errorText}`);
+            }
+        } catch(error) {
+            console.error('Erro de conexão ao salvar quadro:', error);
+            alert('Erro de conexão com o servidor');
+        }
+    })
+}
+
+});
+
 
 
 //Criar elemento no HTML
@@ -146,7 +317,7 @@ async function updateNoteContent(id, content) {
             const errorText = await response.text();
             console.error(`Erro ao atualizar conteúdo da nota ID ${id}:`, errorText);
         }
-    } catch {
+    } catch (error) {
         console.error('Erro de conexão ao atualizar a nota:', error);
     }
 }
@@ -260,18 +431,6 @@ async function deleteNoteStorage(id) {
     }
 }
 
-//Botão de adicionar notas
-if(addNoteBtn) {
-    addNoteBtn.addEventListener('click', addNote);
-}
-//Script para editar notas
-//Script para arrastar e soltar notas
-//Script para mudar a cor do post-it e salvar a preferência no localStorage
-//Script para salvar a preferência de cor do post-it no localStorage
-
-//Gerenciar o grupo de notas
-// Obter o ID
-//Carregar notas do grupo atual
 async function loadNotesCurrentGroup() {
     console.log(`Carregando anotações para o grupo: ${currentGroupId}`);
     try{
@@ -301,9 +460,6 @@ async function loadNotesCurrentGroup() {
     }
 }
 
-loadNotesCurrentGroup();
-
-
 async function LoadGroups() {
     try {
         const response = await fetch(`/groups/get/${LOGGED_IN_USER_ID}`);
@@ -326,9 +482,6 @@ async function LoadGroups() {
     }
 }
 
-if(window.location.pathname.includes('groups.html')) {
-    LoadGroups();
-}
 
 function openSettingsPanel() {
     settingsPanel.classList.add('active');
@@ -337,10 +490,6 @@ function openSettingsPanel() {
 function closeSettingsPanel() {
     settingsPanel.classList.remove('active');
 }
-
-confBtn.addEventListener('click', openSettingsPanel);
-closeSettingsBtn.addEventListener('click', closeSettingsPanel);
-
 
 function toggleDarkMode() {
     body.classList.toggle('dark-mode');
@@ -352,22 +501,18 @@ function applySavedPreference() {
     const savedPreference = localStorage.getItem(storageKey);
 
     if(savedPreference === 'true') {
-        const isDarkModeSaved = savedPreference === 'true';
-
-        if(isDarkModeSaved) {
-            body.classList.add('dark-mode');
+        body.classList.add('dark-mode');
+        
+        if(darkModeToggle) {            
             darkModeToggle.checked = true;
-        } else {
+        } 
+    } else  if (savedPreference === 'false') {
             body.classList.remove('dark-mode');
+            if(darkModeToggle) {
             darkModeToggle.checked = false;
+            }
         }
-    }
 }
-
-darkModeToggle.addEventListener('change', toggleDarkMode);
-
-
-applySavedPreference();
 
 
 function openLoginForm() {
@@ -383,92 +528,7 @@ function closeForms() {
     signupForm.classList.remove('active');
 }
 
-if(loginBtn) {
-    loginBtn.addEventListener('click', openLoginForm);
-}
-if(signupBtn) {
-    signupBtn.addEventListener('click', openSignupForm);
-}
-if(closeLoginBtn) {
-    closeLoginBtn.addEventListener('click', closeForms);
-}
-if(closeSignupBtn) {
-    closeSignupBtn.addEventListener('click', closeForms);
-}
 
-loginFormElement.addEventListener('submit', function(event) {
-    event.preventDefault()
-    
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            email: email,
-            password: password
-        })
-    })
-        .then(response => {
-            if(!response.ok) {
-                return response.text().then(text => {throw new Error(text)});
-            }
-            return response.json();
-        })
-        .then(data => {
-            localStorage.setItem('mindstack_user_id', data.user_id);
-            alert('Login realizado com sucesso');
-            window.location.href = 'groups.html';
-        })
-        .catch(error => {
-            alert('Erro no login: ' + error.message);
-        })
-    });
-
-signupFormElement.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const username = document.getElementById('new-username').value;
-    const email = document.getElementById('new-email').value;
-    const newPassword = document.getElementById('new-password').value;
-    const confirmPassword = document.getElementById('new-password-confirm').value;
-    if(newPassword !== confirmPassword) {
-            alert('Erro: Senhas diferentes');
-            return;
-    }
-
-    if(signupFormElement.checkValidity()) {
-        const urlEncodedData = new URLSearchParams();
-        urlEncodedData.append('new-username', username);
-        urlEncodedData.append('new-email', email);
-        urlEncodedData.append('new-password', newPassword);
-
-        fetch('/insertUser', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-        },
-            body: urlEncodedData
-        })
-        .then(response => {
-            if(!response.ok) {
-                return response.text().then(text => {throw new Error(text)});
-            }
-            return response.text();
-        })
-        .then(data => {
-            alert('Cadastro realizado com sucesso!' + data);
-            window.location.href = 'first.html';
-        })
-        .catch(error => {
-            alert('Erro ao cadastrar: ' + error.message);
-        });
-    } else {
-        signupFormElement.reportValidity();
-    }
-});
 
 function openGroupModal () {
     if(groupManagerModal) { 
@@ -479,60 +539,4 @@ function closeGroupModal() {
     if(groupManagerModal) {
         groupManagerModal.classList.remove('active');
     }
-}
-
-if(saveGroupBtn) {
-    saveGroupBtn.addEventListener('click', openGroupModal);
-}
-
-if(closeGroupModalBtn) {
-    closeGroupModalBtn.addEventListener('click', closeGroupModal);
-}
-
-window.addEventListener('click', (event) => {
-    if(event.target === groupManagerModal && groupManagerModal.classList.contains('active')) {
-        closeGroupModal();
-    }
-});
-
-if(goToGroupsBtn) {
-    goToGroupsBtn.addEventListener('click', () => {
-        window.location.href = 'groups.html';
-    });
-}
-
-if(saveGroupForm) {
-    saveGroupForm.addEventListener('submit' ,async (event) => {
-        event.preventDefault();
-
-        const groupNameInput = document.getElementById('new-group-name');
-        const newGroupName = groupNameInput.value.trim();
-
-        if(!newGroupName) {
-            alert('Por favor, digite um nome para o quadro');
-            return;
-        }
-        try {
-            const response = await fetch('/groups/create', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    user_id: LOGGED_IN_USER_ID,
-                    group_name: newGroupName
-                })
-            });
-            if(response.ok) {
-                const data = await response.json();
-                alert(`Quadro ${newGroupName} salvo com sucesso`);
-
-                window.location.href = 'groups.html';
-            } else {
-                const errorText = await response.text();
-                alert(`Erro ao salvar quadro: ${errorText}`);
-            }
-        } catch(error) {
-            console.error('Erro de conexão ao salvar quadro:', error);
-            alert('Erro de conexão com o servidor');
-        }
-    })
 }
