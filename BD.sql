@@ -54,3 +54,8 @@ values(f_username, f_email, f_password);
 end
 //
 DELIMITER;
+
+-- drop table if exists note_group;
+-- drop table if exists note;
+
+-- INSERT INTO note_group (user_id, group_name) VALUES (1, 'Quadro Principal');
