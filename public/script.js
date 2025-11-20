@@ -490,10 +490,10 @@ async function LoadGroups() {
         const groupElement = document.createElement("a");
         groupElement.href = `first.html?groupId=${group.group_id}`;
         groupElement.classList.add("group-card");
-        groupElement.textContent = group.group_name;
+       
 
         const img = document.createElement("img");
-        img.src = "imagens/MindStack.png"
+        img.src = "imagens/MindStack.jpg"
         img.alt = "Mind Stack Logo";
 
         const label = document.createElement("div");

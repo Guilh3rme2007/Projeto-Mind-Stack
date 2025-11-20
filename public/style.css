@@ -406,6 +406,7 @@ input:checked + .slider:before {
   width: 180px;
   height: 220px;
   text-decoration: none;
+  color: var(--text-color);
   box-shadow: 0 4px 6px var(--drag-post-it-border);
   transition: transform 0.2s, box-shadow 0.2s;
   border: 1px solid var(--drag-post-it-border);
@@ -415,6 +416,7 @@ input:checked + .slider:before {
 .group-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 12px var(--drag-post-it-border);
+  cursor: pointer;
 }
 
 .group-card img {
@@ -432,8 +434,8 @@ input:checked + .slider:before {
   padding: 8px 0;
   border-radius: 20px;
   text-align: center;
-   color: var(--form-text-color);
-   font-weight: 600;
+  color: var(--form-text-color);
+  font-weight: 600;
   font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
