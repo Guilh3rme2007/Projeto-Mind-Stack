@@ -489,8 +489,21 @@ async function LoadGroups() {
       groups.forEach((group) => {
         const groupElement = document.createElement("a");
         groupElement.href = `first.html?groupId=${group.group_id}`;
-        groupElement.classList.add("group-link");
+        groupElement.classList.add("group-card");
         groupElement.textContent = group.group_name;
+
+        const img = document.createElement("img");
+        img.src = "imagens/MindStack.png"
+        img.alt = "Mind Stack Logo";
+
+        const label = document.createElement("div");
+        label.classList.add("group-label");
+        label.textContent = group.group_name;
+        label.title = group.group_name;
+
+        groupElement.appendChild(img);
+        groupElement.appendChild(label);
+
         groupsConteiner.appendChild(groupElement);
       });
     } else {

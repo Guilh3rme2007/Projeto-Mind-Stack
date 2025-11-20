@@ -11,8 +11,8 @@
   --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   --close-btn-color: #aaa;
   --drag-post-it-border: #0000.2;
-  --btn-bg-color: #ffff29;
-  --bg-link-group-color: rgb(252, 247, 0);
+  --btn-bg-color: rgba(211, 211, 211, 0.488);
+  --bg-link-group-color: rgb(167, 169, 176);
 }
 /*Estilos Globais*/
 body {
@@ -388,14 +388,58 @@ input:checked + .slider:before {
   z-index: 100;
 }
 /*Grupos*/
-.group-link {
-  text-decoration: none;
-  color: var(--text-color);
-  font-size: 100%;
-  background-color: var(--bg-link-group-color);
+#groups-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px;
 }
-.link-pages:hover {
-  font-size: 105%;
+
+.group-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-link-group-color);
+  padding: 15px;
+  border-radius: 20px;
+  width: 180px;
+  height: 220px;
+  text-decoration: none;
+  box-shadow: 0 4px 6px var(--drag-post-it-border);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid var(--drag-post-it-border);
+  font-family: var(--font-family);
+}
+
+.group-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px var(--drag-post-it-border);
+}
+
+.group-card img {
+  width: 140px;
+  height: 140px;
+  border-radius: 12x;
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px var(--drag-post-it-border);
+}
+
+.group-label {
+  background-color: var(--bg-color);
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 20px;
+  text-align: center;
+   color: var(--form-text-color);
+   font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 /*Modo escuro*/
 
@@ -411,4 +455,6 @@ body.dark-mode {
   --form-text-color: #ffffff;
   --form-input-bg: transparent;
   --drag-post-it-border: #777778;
+  --btn-bg-color: rgba(0, 0, 0, 0.403);
+  --bg-link-group-color: rgb(255, 255, 255);
 }
